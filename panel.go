@@ -340,15 +340,16 @@ type (
 		Mode string `json:"mode"`
 	}
 	FieldConfigDefaults struct {
-		Unit       string            `json:"unit"`
-		NoValue    string            `json:"noValue,omitempty"`
-		Decimals   *int              `json:"decimals,omitempty"`
-		Min        *float64          `json:"min,omitempty"`
-		Max        *float64          `json:"max,omitempty"`
-		Color      FieldConfigColor  `json:"color"`
-		Thresholds Thresholds        `json:"thresholds"`
-		Custom     FieldConfigCustom `json:"custom"`
-		Links      []Link            `json:"links,omitempty"`
+		Unit        string            `json:"unit"`
+		NoValue     string            `json:"noValue,omitempty"`
+		DisplayName string            `json:"displayName,omitempty"`
+		Decimals    *int              `json:"decimals,omitempty"`
+		Min         *float64          `json:"min,omitempty"`
+		Max         *float64          `json:"max,omitempty"`
+		Color       FieldConfigColor  `json:"color"`
+		Thresholds  Thresholds        `json:"thresholds"`
+		Custom      FieldConfigCustom `json:"custom"`
+		Links       []Link            `json:"links,omitempty"`
 	}
 	FieldConfigOverrideProperty struct {
 		ID    string      `json:"id"`
