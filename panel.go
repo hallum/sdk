@@ -335,9 +335,12 @@ type (
 		Show        *bool    `json:"showLegend,omitempty"`
 		DisplayMode string   `json:"displayMode"`
 		Placement   string   `json:"placement"`
+		SortBy      string   `json:"sortBy,omitempty"`
+		SortDesc    string   `json:"sortDesc,omitempty"`
 	}
 	TimeseriesTooltipOptions struct {
 		Mode string `json:"mode"`
+		Sort string `json:"sort"`
 	}
 	FieldConfigDefaults struct {
 		Unit        string            `json:"unit"`
@@ -710,6 +713,11 @@ func NewTimeseries(title string) *Panel {
 						FixedColor: "green",
 						SeriesBy:   "last",
 					},
+				},
+			},
+			Options: TimeseriesOptions{
+				Tooltip: TimeseriesTooltipOptions{
+					Sort: "none",
 				},
 			},
 		},
