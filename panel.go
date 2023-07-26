@@ -336,7 +336,7 @@ type (
 		DisplayMode string   `json:"displayMode"`
 		Placement   string   `json:"placement"`
 		SortBy      string   `json:"sortBy,omitempty"`
-		SortDesc    string   `json:"sortDesc,omitempty"`
+		SortDesc    *bool    `json:"sortDesc,omitempty"`
 	}
 	TimeseriesTooltipOptions struct {
 		Mode string `json:"mode"`
