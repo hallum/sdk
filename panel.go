@@ -30,6 +30,7 @@ import (
 const (
 	CustomType panelType = iota
 	DashlistType
+	DashlistAllFoldersType
 	GraphType
 	TableType
 	TextType
@@ -59,6 +60,7 @@ type (
 		*SinglestatPanel
 		*StatPanel
 		*DashlistPanel
+		*DashlistAllFoldersPanel
 		*PluginlistPanel
 		*RowPanel
 		*AlertlistPanel
@@ -245,10 +247,21 @@ type (
 		Text          *TextOptions  `json:"text,omitempty"`
 	}
 	DashlistPanel struct {
+		Mode             string   `json:"mode"`
+		Query            string   `json:"query"`
+		Tags             []string `json:"tags"`
+		FolderID         int      `json:"folderId"`
+		Limit            int      `json:"limit"`
+		Headings         bool     `json:"headings"`
+		Recent           bool     `json:"recent"`
+		Search           bool     `json:"search"`
+		Starred          bool     `json:"starred"`
+		SearchAllFolders bool
+	}
+	DashlistAllFoldersPanel struct {
 		Mode     string   `json:"mode"`
 		Query    string   `json:"query"`
 		Tags     []string `json:"tags"`
-		FolderID int      `json:"folderId"`
 		Limit    int      `json:"limit"`
 		Headings bool     `json:"headings"`
 		Recent   bool     `json:"recent"`
@@ -653,6 +666,19 @@ type RangeMap struct {
 	To   *string `json:"to,omitempty"`
 }
 
+func newDashlistAllFoldersPanel(dlp *DashlistPanel) DashlistAllFoldersPanel {
+	return DashlistAllFoldersPanel{
+		Mode:     dlp.Mode,
+		Query:    dlp.Query,
+		Tags:     dlp.Tags,
+		Limit:    dlp.Limit,
+		Headings: dlp.Headings,
+		Recent:   dlp.Recent,
+		Search:   dlp.Search,
+		Starred:  dlp.Starred,
+	}
+}
+
 // NewDashlist initializes panel with a dashlist panel.
 func NewDashlist(title string) *Panel {
 	if title == "" {
@@ -666,7 +692,7 @@ func NewDashlist(title string) *Panel {
 			Type:     "dashlist",
 			Renderer: &render,
 			IsNew:    true},
-		DashlistPanel: &DashlistPanel{}}
+		DashlistPanel: &DashlistPanel{SearchAllFolders: true}}
 }
 
 // NewGraph initializes panel with a graph panel.
@@ -1243,6 +1269,14 @@ func (p *Panel) MarshalJSON() ([]byte, error) {
 		}{p.CommonPanel, *p.StatPanel}
 		return json.Marshal(outSinglestat)
 	case DashlistType:
+		if p.DashlistPanel.SearchAllFolders {
+			dlp := newDashlistAllFoldersPanel(p.DashlistPanel)
+			var outDashlist = struct {
+				CommonPanel
+				DashlistAllFoldersPanel
+			}{p.CommonPanel, dlp}
+			return json.Marshal(outDashlist)
+		}
 		var outDashlist = struct {
 			CommonPanel
 			DashlistPanel
